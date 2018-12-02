@@ -471,15 +471,17 @@ public class AdvancedGeolocation extends CordovaPlugin{
                 // Disable new tasks from being submitted
                 pool.shutdown();
                 // Wait a while for existing tasks to terminate
-                if (!pool.awaitTermination(5, TimeUnit.SECONDS)) {
+                if (!pool.awaitTermination(3, TimeUnit.SECONDS)) {
                     pool.shutdownNow(); // Cancel currently executing tasks
                     // Wait a while for tasks to respond to being cancelled
-                    if (!pool.awaitTermination(30, TimeUnit.SECONDS)) {
+                    if (!pool.awaitTermination(7, TimeUnit.SECONDS)) {
                         System.err.println("Cordova thread pool did not terminate.");
                     }
                 }
             }
             catch (InterruptedException ie) {
+                // (Re-)Cancel if current thread also interrupted
+                pool.shutdownNow();
                 // Preserve interrupt status
                 Thread.currentThread().interrupt();
             }
